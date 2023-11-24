@@ -34,7 +34,7 @@ async function createSubscription(
 
 function standardPlan() {
   const priceId = import.meta.env.VITE_BASIC_PLAN
-  const price = '5.00'
+  const price = '0.00'
   const plan = 'Basic'
   createSubscription(priceId, price, plan)
 }
@@ -48,26 +48,26 @@ function premiumPlan() {
 </script>
 
 <template>
-  <div v-if="userStore.userData.id" class="mx-auto">
+  <div class="mx-auto lg:w-[50%]">
     <h2
       class="tablet:font-bold tablet:text-2xl my-7 text-center text-lg font-bold"
     >
       Choose your Subscription!
     </h2>
-    <div class="tablet:grid-cols-2 tablet:gap-2 grid">
+    <div class="grid grid-cols-2 gap-5">
       <!-- Build your card component -->
       <PlanCard
         title="Standard Plan"
         :amount="0"
         icon1="20 posts daily"
-        icon2="5gb"
+        icon2=""
         @click="standardPlan"
       />
       <PlanCard
         title="Premium Plan"
         :amount="10"
-        icon1="4 team members"
-        icon2="10gb"
+        icon1="unlimited posts daily"
+        icon2=""
         @click="premiumPlan"
       />
     </div>

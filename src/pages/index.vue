@@ -23,7 +23,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const postStore = usePostStore()
 
-const showPaywall = ref(true);
+const showPaywall = ref(false)
 const { isAuthenticated, isPremium } = storeToRefs(authStore)
 const { posts } = storeToRefs(postStore)
 
@@ -31,12 +31,28 @@ watch((viewedPostCount) => {
   if (countGreaterThan20(viewedPostCount.value)) {
     if (isAuthenticated) {
       if (isPremium) {
-        // 
+        //
       }
-
     }
   }
 })
+
+function toggleShowPaywall() {
+  if (isAuthenticated) {
+    if (isPremium)
+      showPaywall.value = false
+
+    else
+      showPaywall.value = true
+      setTimeout(() => {
+        showSubscriptions()
+      }, 1000);
+  }
+}
+
+function showSubscriptions() {
+  router.push('/plans')
+}
 
 async function showPost(post) {
   await postStore.setSelectedPostId(post)
@@ -106,7 +122,10 @@ onMounted(() => {
             You have reached the end of todays posts for you to view more login and select a plan
           </p> -->
           <button type="submit" class="text-underline px-6 py-2">
-            <p class="rounded-10 bg-orange-100 px-5 py-2 text-orange-600">
+            <p
+              class="rounded-10 bg-orange-100 px-5 py-2 text-orange-600"
+              @click="toggleShowPaywall()"
+            >
               Load more
             </p>
           </button>
