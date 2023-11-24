@@ -4,14 +4,14 @@ import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { usePostStore } from '../../store/posts'
 
-const route = useRoute()
+// const route = useRoute()
 
 const postStore = usePostStore()
 
 const { post } = storeToRefs(postStore)
 
 onMounted(() => {
-  postStore.fetchPostById(route.params.id)
+  // postStore.fetchPostById(route.params.id)
   // console.log(route.params.id)
   post.value = postStore.post
 })

@@ -4,10 +4,25 @@ import axios from 'axios'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
-    posts: [],
+    isPremium: false,
+    users: [],
   }),
 
   actions: {
+    async fetchUsers() {
+      try {
+        const apiEndpoint = 'https://jsonplaceholder.typicode.com/users'
+        const config = {
+          params: {},
+        }
+
+        const response = await axios.get(apiEndpoint, config)
+        this.users = response.data
+      }
+      catch (error) {
+        console.error('Error fetching posts:', error)
+      }
+    },
     async login(usernameOrEmail, password) {
       try {
         const apiEndpoint = 'https://jsonplaceholder.typicode.com/users'
@@ -24,8 +39,11 @@ export const useAuthStore = defineStore('auth', {
         })
       }
       catch (error) {
-        console.error('Error fetching posts:', error)
+        console.error('Error authenticating this account:', error)
       }
+    },
+    logout() {
+
     },
     async generateLogo() {
       return axios.get('[<https://api.unsplash.com/photos/random>](<https://api.unsplash.com/photos/random>)', {

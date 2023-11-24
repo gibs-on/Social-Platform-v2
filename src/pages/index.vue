@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../store/auth'
 import { usePostStore } from '../../store/posts'
 
@@ -18,20 +19,29 @@ function saveLocally(name, value) {
 // const count = ref(Number.parseInt(localStorage.getItem('count')) || 0)
 // const today = ref(localStorage.getItem('today') || 'No date stored locally')
 
-const authStore = usePostStore()
+const router = useRouter()
+const authStore = useAuthStore()
 const postStore = usePostStore()
 
-// const posts = ref([]);
-const { isAuthenticated } = storeToRefs(authStore)
+const showPaywall = ref(true);
+const { isAuthenticated, isPremium } = storeToRefs(authStore)
 const { posts } = storeToRefs(postStore)
 
-watch ((viewedPostCount) => {
+watch((viewedPostCount) => {
   if (countGreaterThan20(viewedPostCount.value)) {
     if (isAuthenticated) {
-      // if ()
+      if (isPremium) {
+        // 
+      }
+
     }
   }
 })
+
+async function showPost(post) {
+  await postStore.setSelectedPostId(post)
+  router.push('/posts')
+}
 
 function countGreaterThan20(count) {
   return count > 20
@@ -39,7 +49,6 @@ function countGreaterThan20(count) {
 
 onMounted(() => {
   postStore.fetchPosts()
-  posts.value = postStore.posts
 })
 </script>
 
@@ -56,11 +65,11 @@ onMounted(() => {
           Hello world!
         </p>
       </div>
-        <div v-else class="ml-5 hidden md:block">
-          <router-link to="login">
+      <div v-else class="ml-5 hidden md:block">
+        <router-link to="login">
           Login
-          </router-link>
-    </div>
+        </router-link>
+      </div>
     </div>
   </div>
 
@@ -72,7 +81,8 @@ onMounted(() => {
 
       <div class="px-5">
         <div v-for="post in posts" :key="post.id" class="mt-4 w-[50vw] flex">
-          <router-link class="flex" :to="{ path: 'posts', params: { id: post.id } }">
+          <!-- <router-link class="flex" :to="{ path: 'posts', params: { id: post.id } }"> -->
+          <div class="flex" @click="showPost(post)">
             <img
               src="/favicon.svg" class="aspect-ratio-[1.5/1] h-[110px] border rounded-xl object-contain object-center"
               alt=""
@@ -88,7 +98,7 @@ onMounted(() => {
                 <img src="/asset/arrow-orange-right.png" class="w-[30px]" alt="">
               </div>
             </div>
-          </router-link>
+          </div>
         </div>
 
         <div v-if="posts.length" class="mt-10 w-full flex">

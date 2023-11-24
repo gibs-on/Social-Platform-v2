@@ -3,7 +3,8 @@ import axios from 'axios'
 
 export const usePostStore = defineStore('posts', {
   state: () => ({
-    post: Number,
+    id: Number,
+    post: {},
     posts: [],
   }),
 
@@ -22,9 +23,13 @@ export const usePostStore = defineStore('posts', {
         console.error('Error fetching posts:', error)
       }
     },
-    async fetchPostById(id) {
+    setSelectedPostId(post) {
+      this.id = post.id
+      this.post = post
+    },
+    async fetchPostById() {
       try {
-        const apiEndpoint = `https://jsonplaceholder.typicode.com/posts/${id}`
+        const apiEndpoint = `https://jsonplaceholder.typicode.com/posts/${this.id}`
         const response = await axios.get(apiEndpoint)
         this.post = response.data
       }
@@ -52,9 +57,9 @@ export const usePostStore = defineStore('posts', {
   },
 
   getters: {
-    getPostById: (postId) => {
-      return state.posts.find(post => post.id === postId)
-    },
+    /* getPostById: (postId) => {
+      return this.posts.find(post => post.id === postId)
+    }, */
   },
 
   mutations: {
